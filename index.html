@@ -24,6 +24,7 @@ body {
   border-radius: 50%;
   opacity: 0.8;
   animation: twinkle linear infinite;
+  will-change: transform;
 }
 
 @keyframes twinkle {
@@ -113,6 +114,7 @@ button:hover {
 <script>
 // --- Starfield ---
 const starCount = 60;
+const stars = [];
 for (let i = 0; i < starCount; i++) {
   const star = document.createElement("div");
   star.className = "star";
@@ -123,6 +125,16 @@ for (let i = 0; i < starCount; i++) {
   star.style.top = `${Math.random()*100}%`;
   star.style.animationDuration = `${Math.random()*5+5}s`;
   document.body.appendChild(star);
+  stars.push(star);
+}
+
+// Function to create subtle parallax movement
+function moveStars() {
+  stars.forEach(star => {
+    const xShift = (Math.random()-0.5) * 4; // small horizontal shift
+    const yShift = (Math.random()-0.5) * 4; // small vertical shift
+    star.style.transform = `translate(${xShift}px, ${yShift}px)`;
+  });
 }
 
 // --- Questions ---
@@ -176,6 +188,7 @@ function startGame() {
 }
 
 function showCategories() {
+  moveStars(); // move stars subtly
   const card = document.getElementById("card");
   const buttonsDiv = document.getElementById("buttons");
   card.classList.add("fade");
@@ -199,6 +212,7 @@ function showCategories() {
 }
 
 function showQuestion(category) {
+  moveStars(); // subtle star shift for each question
   const card = document.getElementById("card");
   const buttonsDiv = document.getElementById("buttons");
   
@@ -233,6 +247,7 @@ function showQuestion(category) {
 }
 
 function endGame() {
+  moveStars(); // subtle star shift on end
   const card = document.getElementById("card");
   const buttonsDiv = document.getElementById("buttons");
   card.classList.add("fade");

@@ -95,12 +95,6 @@ button:hover {
   font-size: 12px;
   opacity: 0.4;
 }
-
-/* Starfield animation */
-@keyframes moveStars {
-  from {transform: translateY(0);}
-  to {transform: translateY(-200px);}
-}
 </style>
 </head>
 <body>
@@ -111,7 +105,7 @@ button:hover {
     Click to Begin
   </div>
   <div id="buttons">
-    <button onclick="startGame()">Begin</button>
+    <button id="beginBtn">Begin</button>
   </div>
   <div class="footer">Take turns answering.</div>
 </div>
@@ -174,6 +168,9 @@ const questions = {
 
 let usedQuestions = { "Depth": [], "Chemistry": [], "Playful": [], "Late Night": [], "Memory & Mood": [] };
 
+// --- Event listener for Begin ---
+document.getElementById("beginBtn").addEventListener("click", startGame);
+
 function startGame() {
   showCategories();
 }
@@ -226,4 +223,29 @@ function showQuestion(category) {
     const nextBtn = document.createElement("button");
     nextBtn.textContent = "Continue";
     nextBtn.onclick = () => showCategories();
-    buttonsDiv.appendChild
+    buttonsDiv.appendChild(nextBtn);
+    
+    const endBtn = document.createElement("button");
+    endBtn.textContent = "End";
+    endBtn.onclick = () => endGame();
+    buttonsDiv.appendChild(endBtn);
+  }, 400);
+}
+
+function endGame() {
+  const card = document.getElementById("card");
+  const buttonsDiv = document.getElementById("buttons");
+  card.classList.add("fade");
+  setTimeout(() => {
+    card.textContent = "Thank you for sharing this time together.";
+    card.classList.remove("fade");
+    buttonsDiv.innerHTML = "";
+    const restartBtn = document.createElement("button");
+    restartBtn.textContent = "Play Again";
+    restartBtn.onclick = () => showCategories();
+    buttonsDiv.appendChild(restartBtn);
+  }, 400);
+}
+</script>
+</body>
+</html>

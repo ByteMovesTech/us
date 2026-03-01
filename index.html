@@ -1,1 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Between Us</title>
 
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at top, #1b1f3a, #0d0f1a 70%);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.container {
+  text-align: center;
+  width: 90%;
+  max-width: 500px;
+}
+
+h1 {
+  font-weight: 300;
+  letter-spacing: 3px;
+  margin-bottom: 40px;
+  opacity: 0.8;
+}
+
+.card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  padding: 40px 25px;
+  border-radius: 20px;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1.5;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  box-shadow: 0 0 30px rgba(255,255,255,0.05);
+}
+
+.card.fade {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+button {
+  margin-top: 30px;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 30px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  font-size: 14px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.footer {
+  margin-top: 25px;
+  font-size: 12px;
+  opacity: 0.4;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <h1>BETWEEN US</h1>
+  <div class="card" id="card">
+    Tap start.
+  </div>
+  <button onclick="nextCard()">Start</button>
+  <div class="footer">Take turns answering.</div>
+</div>
+
+<script>
+const cards = [
+
+"When did you first feel comfortable being fully yourself with me?",
+"What part of me do you trust the most?",
+"What’s something I do that makes you feel safe?",
+"What moment between us felt bigger than it looked?",
+"When do you feel closest to me?",
+"What’s something about me you admire quietly?",
+"What part of loving me feels vulnerable?",
+"What emotion do you associate with me most?",
+"What’s something I’ve said that still lingers with you?",
+"What do you miss most when we hang up?",
+"What’s something about me that pulls you in?",
+"When do you feel most desired by me?",
+"What memory of us still gives you butterflies?",
+"What’s something you wish you could whisper right now?",
+"When do you feel the most connected, even at a distance?",
+"Who would win in a totally unnecessary competition?",
+"What’s something about me that secretly makes you laugh?",
+"If we were a duo in a show, what would our dynamic be?",
+"What’s our unofficial inside joke?",
+"What’s something sweet you’d never admit out loud?",
+"What part of loving someone feels scary?",
+"When do you feel most emotionally exposed with me?",
+"What kind of reassurance matters most to you?",
+"What makes you feel calm with me?",
+"What kind of silence between us feels comfortable?",
+"What mood do we create when we talk late?",
+"What moment felt unexpectedly romantic?",
+"What time of day reminds you of me?",
+"What memory feels soft and safe?",
+"What part of our connection feels rare?"
+
+];
+
+let usedCards = [];
+let drawCount = 0;
+
+function nextCard() {
+  const cardElement = document.getElementById("card");
+
+  if (usedCards.length === cards.length) {
+    usedCards = [];
+  }
+
+  let randomIndex;
+  do {
+    randomIndex = Math.floor(Math.random() * cards.length);
+  } while (usedCards.includes(randomIndex));
+
+  usedCards.push(randomIndex);
+  drawCount++;
+
+  cardElement.classList.add("fade");
+
+  setTimeout(() => {
+    if (drawCount === 15) {
+      cardElement.textContent = "I’m really proud of what exists between us.";
+    } else {
+      cardElement.textContent = cards[randomIndex];
+    }
+    cardElement.classList.remove("fade");
+  }, 400);
+}
+</script>
+
+</body>
+</html>

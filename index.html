@@ -18,13 +18,21 @@ body {
   position: relative;
 }
 
-.star {
+.star, .trail {
   position: absolute;
-  background: white;
   border-radius: 50%;
   opacity: 0.8;
+  will-change: transform, opacity;
+}
+
+.star {
+  background: white;
   animation: twinkle linear infinite;
-  will-change: transform;
+}
+
+.trail {
+  background: rgba(255,255,255,0.2);
+  pointer-events: none;
 }
 
 @keyframes twinkle {
@@ -115,6 +123,8 @@ button:hover {
 // --- Starfield ---
 const starCount = 60;
 const stars = [];
+const trails = [];
+
 for (let i = 0; i < starCount; i++) {
   const star = document.createElement("div");
   star.className = "star";
@@ -128,12 +138,31 @@ for (let i = 0; i < starCount; i++) {
   stars.push(star);
 }
 
-// Function to create subtle parallax movement
-function moveStars() {
+// Subtle parallax shift and trails
+function animateStarsWithTrails() {
   stars.forEach(star => {
-    const xShift = (Math.random()-0.5) * 4; // small horizontal shift
-    const yShift = (Math.random()-0.5) * 4; // small vertical shift
+    const prevX = star.offsetLeft;
+    const prevY = star.offsetTop;
+    const xShift = (Math.random()-0.5) * 4;
+    const yShift = (Math.random()-0.5) * 4;
     star.style.transform = `translate(${xShift}px, ${yShift}px)`;
+    
+    // Create trail
+    const trail = document.createElement("div");
+    trail.className = "trail";
+    const trailSize = Math.random()*2+1;
+    trail.style.width = `${trailSize}px`;
+    trail.style.height = `${trailSize}px`;
+    trail.style.left = `${prevX}px`;
+    trail.style.top = `${prevY}px`;
+    document.body.appendChild(trail);
+    trails.push(trail);
+    
+    setTimeout(() => {
+      trail.style.transition = "opacity 0.6s";
+      trail.style.opacity = 0;
+      setTimeout(() => document.body.removeChild(trail), 600);
+    }, 50);
   });
 }
 
@@ -183,12 +212,10 @@ let usedQuestions = { "Depth": [], "Chemistry": [], "Playful": [], "Late Night":
 // --- Event listener for Begin ---
 document.getElementById("beginBtn").addEventListener("click", startGame);
 
-function startGame() {
-  showCategories();
-}
+function startGame() { showCategories(); }
 
 function showCategories() {
-  moveStars(); // move stars subtly
+  animateStarsWithTrails(); // subtle trails
   const card = document.getElementById("card");
   const buttonsDiv = document.getElementById("buttons");
   card.classList.add("fade");
@@ -212,7 +239,7 @@ function showCategories() {
 }
 
 function showQuestion(category) {
-  moveStars(); // subtle star shift for each question
+  animateStarsWithTrails(); // subtle trails on each question
   const card = document.getElementById("card");
   const buttonsDiv = document.getElementById("buttons");
   
@@ -247,7 +274,7 @@ function showQuestion(category) {
 }
 
 function endGame() {
-  moveStars(); // subtle star shift on end
+  animateStarsWithTrails(); // subtle trails on end
   const card = document.getElementById("card");
   const buttonsDiv = document.getElementById("buttons");
   card.classList.add("fade");

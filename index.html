@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Between Us</title>
-
 <style>
 body {
   margin: 0;
@@ -31,6 +30,23 @@ h1 {
   opacity: 0.8;
 }
 
+button {
+  margin: 15px 5px 0 5px;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 30px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  font-size: 14px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: rgba(255,255,255,0.2);
+}
+
 .card {
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1);
@@ -52,107 +68,143 @@ h1 {
   transform: translateY(10px);
 }
 
-button {
-  margin-top: 30px;
-  padding: 12px 30px;
-  border: none;
-  border-radius: 30px;
-  background: rgba(255,255,255,0.1);
-  color: white;
-  font-size: 14px;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  background: rgba(255,255,255,0.2);
-}
-
 .footer {
-  margin-top: 25px;
+  margin-top: 20px;
   font-size: 12px;
   opacity: 0.4;
 }
 </style>
 </head>
-
 <body>
-<div class="container">
+<div class="container" id="main-container">
   <h1>BETWEEN US</h1>
   <div class="card" id="card">
-    Tap start.
+    Click to Begin
   </div>
-  <button onclick="nextCard()">Start</button>
+  <div id="buttons">
+    <button onclick="startGame()">Begin</button>
+  </div>
   <div class="footer">Take turns answering.</div>
 </div>
 
 <script>
-const cards = [
+const questions = {
+  "Depth": [
+    "When did you first feel comfortable being fully yourself with me?",
+    "What part of me do you trust the most?",
+    "What’s something I do that makes you feel safe?",
+    "When do you feel closest to me?",
+    "What’s something about me you admire quietly?",
+    "What part of loving me feels vulnerable?"
+  ],
+  "Chemistry": [
+    "What’s something I’ve said that still lingers with you?",
+    "What do you miss most when we hang up?",
+    "What’s something about me that pulls you in?",
+    "When do you feel most desired by me?",
+    "What memory of us still gives you butterflies?",
+    "What’s something you wish you could whisper right now?"
+  ],
+  "Playful": [
+    "Who would win in a totally unnecessary competition?",
+    "What’s something about me that secretly makes you laugh?",
+    "If we were a duo in a show, what would our dynamic be?",
+    "What’s our unofficial inside joke?",
+    "What’s something sweet you’d never admit out loud?"
+  ],
+  "Late Night": [
+    "What part of loving someone feels scary?",
+    "When do you feel most emotionally exposed with me?",
+    "What kind of reassurance matters most to you?",
+    "What makes you feel calm with me?",
+    "What kind of silence between us feels comfortable?"
+  ],
+  "Memory & Mood": [
+    "What mood do we create when we talk late?",
+    "What moment felt unexpectedly romantic?",
+    "What time of day reminds you of me?",
+    "What memory feels soft and safe?",
+    "What part of our connection feels rare?"
+  ]
+};
 
-"When did you first feel comfortable being fully yourself with me?",
-"What part of me do you trust the most?",
-"What’s something I do that makes you feel safe?",
-"What moment between us felt bigger than it looked?",
-"When do you feel closest to me?",
-"What’s something about me you admire quietly?",
-"What part of loving me feels vulnerable?",
-"What emotion do you associate with me most?",
-"What’s something I’ve said that still lingers with you?",
-"What do you miss most when we hang up?",
-"What’s something about me that pulls you in?",
-"When do you feel most desired by me?",
-"What memory of us still gives you butterflies?",
-"What’s something you wish you could whisper right now?",
-"When do you feel the most connected, even at a distance?",
-"Who would win in a totally unnecessary competition?",
-"What’s something about me that secretly makes you laugh?",
-"If we were a duo in a show, what would our dynamic be?",
-"What’s our unofficial inside joke?",
-"What’s something sweet you’d never admit out loud?",
-"What part of loving someone feels scary?",
-"When do you feel most emotionally exposed with me?",
-"What kind of reassurance matters most to you?",
-"What makes you feel calm with me?",
-"What kind of silence between us feels comfortable?",
-"What mood do we create when we talk late?",
-"What moment felt unexpectedly romantic?",
-"What time of day reminds you of me?",
-"What memory feels soft and safe?",
-"What part of our connection feels rare?"
+let usedQuestions = { "Depth": [], "Chemistry": [], "Playful": [], "Late Night": [], "Memory & Mood": [] };
 
-];
+function startGame() {
+  showCategories();
+}
 
-let usedCards = [];
-let drawCount = 0;
-
-function nextCard() {
-  const cardElement = document.getElementById("card");
-
-  if (usedCards.length === cards.length) {
-    usedCards = [];
-  }
-
-  let randomIndex;
-  do {
-    randomIndex = Math.floor(Math.random() * cards.length);
-  } while (usedCards.includes(randomIndex));
-
-  usedCards.push(randomIndex);
-  drawCount++;
-
-  cardElement.classList.add("fade");
-
+function showCategories() {
+  const card = document.getElementById("card");
+  const buttonsDiv = document.getElementById("buttons");
+  card.classList.add("fade");
   setTimeout(() => {
-    if (drawCount === 15) {
-      cardElement.textContent = "I’m really proud of what exists between us.";
-    } else {
-      cardElement.textContent = cards[randomIndex];
+    card.textContent = "Choose a category";
+    card.classList.remove("fade");
+    
+    buttonsDiv.innerHTML = "";
+    for (let category in questions) {
+      const btn = document.createElement("button");
+      btn.textContent = category;
+      btn.onclick = () => showQuestion(category);
+      buttonsDiv.appendChild(btn);
     }
-    cardElement.classList.remove("fade");
+    
+    const endBtn = document.createElement("button");
+    endBtn.textContent = "End";
+    endBtn.onclick = () => endGame();
+    buttonsDiv.appendChild(endBtn);
+  }, 400);
+}
+
+function showQuestion(category) {
+  const card = document.getElementById("card");
+  const buttonsDiv = document.getElementById("buttons");
+  
+  if (usedQuestions[category].length === questions[category].length) {
+    usedQuestions[category] = [];
+  }
+  
+  let index;
+  do {
+    index = Math.floor(Math.random() * questions[category].length);
+  } while (usedQuestions[category].includes(index));
+  
+  usedQuestions[category].push(index);
+  const question = questions[category][index];
+  
+  card.classList.add("fade");
+  setTimeout(() => {
+    card.textContent = question;
+    card.classList.remove("fade");
+    
+    buttonsDiv.innerHTML = "";
+    const nextBtn = document.createElement("button");
+    nextBtn.textContent = "Continue";
+    nextBtn.onclick = () => showCategories();
+    buttonsDiv.appendChild(nextBtn);
+    
+    const endBtn = document.createElement("button");
+    endBtn.textContent = "End";
+    endBtn.onclick = () => endGame();
+    buttonsDiv.appendChild(endBtn);
+  }, 400);
+}
+
+function endGame() {
+  const card = document.getElementById("card");
+  const buttonsDiv = document.getElementById("buttons");
+  card.classList.add("fade");
+  setTimeout(() => {
+    card.textContent = "Thank you for sharing this time together.";
+    card.classList.remove("fade");
+    buttonsDiv.innerHTML = "";
+    const restartBtn = document.createElement("button");
+    restartBtn.textContent = "Play Again";
+    restartBtn.onclick = () => showCategories();
+    buttonsDiv.appendChild(restartBtn);
   }, 400);
 }
 </script>
-
 </body>
 </html>
